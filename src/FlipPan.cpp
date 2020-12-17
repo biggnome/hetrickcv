@@ -47,7 +47,7 @@ struct FlipPan : Module
 
 void FlipPan::process(const ProcessArgs &args)
 {
-	int channels = inputs[LEFT_INPUT].getChannels();
+	int channels = std::max(inputs[LEFT_INPUT].getChannels(), inputs[RIGHT_INPUT].getChannels());
 	for (int c = 0; c < channels; c++) {
 		float inL = inputs[LEFT_INPUT].getPolyVoltage(c);
 		float inR = inputs[RIGHT_INPUT].getPolyVoltage(c);

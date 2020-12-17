@@ -49,7 +49,7 @@ struct TwoToFour : Module
 
 void TwoToFour::process(const ProcessArgs &args)
 {
-	int channels = inputs[INA_INPUT].getChannels();
+	int channels = std::max(inputs[INA_INPUT].getChannels(), inputs[INB_INPUT].getChannels());
 	for (int c = 0; c < channels; c++) {
 	    const float inA = inputs[INA_INPUT].getPolyVoltage(c);
 	    const float inB = inputs[INB_INPUT].getPolyVoltage(c);
