@@ -74,12 +74,12 @@ struct Scanner : Module
 	Scanner()
 	{
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-        configParam(Scanner::SCAN_PARAM, 0, 5.0, 0.0, "");
-        configParam(Scanner::STAGES_PARAM, 0, 6.0, 6.0, "");
-        configParam(Scanner::WIDTH_PARAM, 0, 5.0, 0.0, "");
-        configParam(Scanner::SLOPE_PARAM, 0, 5.0, 0.0, "");
-        configParam(Scanner::OFFSET_PARAM, 0.0, 1.0, 0.0, "");
-        configParam(Scanner::MIXSCALE_PARAM, 0.0, 1.0, 0.125, "");
+        configParam(Scanner::SCAN_PARAM, 0.0, 5.0, 0.0, "Scan", "", 0, 0.2);
+        configParam(Scanner::STAGES_PARAM, 0, 6, 6, "Stages", "", 0, 1, 2);
+        configParam(Scanner::WIDTH_PARAM, 0.0, 5.0, 0.0, "Width", "", 0, 0.2);
+        configParam(Scanner::SLOPE_PARAM, 0.0, 5.0, 0.0, "Slope", "", 0, 0.2);
+        configParam(Scanner::OFFSET_PARAM, 0.0, 1.0, 0.0, "Offset", "V", 0.0, 5.0);
+        configParam(Scanner::MIXSCALE_PARAM, 0.0, 1.0, 0.125, "Mix");
 	}
 
     void process(const ProcessArgs &args) override;
@@ -198,7 +198,7 @@ ScannerWidget::ScannerWidget(Scanner *module)
     addParam(createParam<Davies1900hBlackKnob>(Vec(knobX, 65), module, Scanner::SCAN_PARAM));
     addInput(createInput<PJ301MPort>(Vec(jackX, 70), module, Scanner::SCAN_INPUT));
 
-    addParam(createParam<Davies1900hBlackKnob>(Vec(knobX, 125), module, Scanner::STAGES_PARAM));
+    addParam(createParam<Davies1900hBlackSnapKnob>(Vec(knobX, 125), module, Scanner::STAGES_PARAM));
     addInput(createInput<PJ301MPort>(Vec(jackX, 130), module, Scanner::STAGES_INPUT));
 
     addParam(createParam<Davies1900hBlackKnob>(Vec(knobX, 185), module, Scanner::WIDTH_PARAM));

@@ -64,8 +64,8 @@ struct Rotator : Module
 	Rotator()
 	{
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-        configParam(Rotator::ROTATE_PARAM, 0, 7.0, 0.0, "");
-        configParam(Rotator::STAGES_PARAM, 0, 7.0, 7.0, "");
+        configParam(Rotator::ROTATE_PARAM, 0, 7, 0, "Rotate", "", 0, 1, 1);
+        configParam(Rotator::STAGES_PARAM, 0, 6, 6, "Stages", "", 0, 1, 2);
 	}
 
     void process(const ProcessArgs &args) override;
@@ -89,12 +89,12 @@ void Rotator::process(const ProcessArgs &args)
     int rotation = round(params[ROTATE_PARAM].getValue() + inputs[ROTATE_INPUT].getVoltage());
     int stages = round(params[STAGES_PARAM].getValue() + inputs[STAGES_INPUT].getVoltage());
 
+    stages = clampInt(stages) + 2;
     rotation = clampInt(rotation);
-    stages = clampInt(stages) + 1;
 
     for(int i = 0; i < 8; i++)
     {
-        const int input = (rotation + i) % stages;
+        const int input = (stages - rotation + i) % stages;
         outputs[i].setVoltage(inputs[input].getVoltage());
 
         lights[IN1_POS_LIGHT + 2*i].setSmoothBrightness(fmaxf(0.0, inputs[i].getVoltage() / 5.0), 10);
@@ -126,8 +126,8 @@ RotatorWidget::RotatorWidget(Rotator *module)
 	addChild(createWidget<ScrewSilver>(Vec(box.size.x - 30, 365)));
 
     //////PARAMS//////
-    addParam(createParam<Davies1900hBlackKnob>(Vec(70, 85), module, Rotator::ROTATE_PARAM));
-    addParam(createParam<Davies1900hBlackKnob>(Vec(70, 245), module, Rotator::STAGES_PARAM));
+    addParam(createParam<Davies1900hBlackSnapKnob>(Vec(70, 85), module, Rotator::ROTATE_PARAM));
+    addParam(createParam<Davies1900hBlackSnapKnob>(Vec(70, 245), module, Rotator::STAGES_PARAM));
 
     addInput(createInput<PJ301MPort>(Vec(75, 150), module, Rotator::ROTATE_INPUT));
     addInput(createInput<PJ301MPort>(Vec(75, 310), module, Rotator::STAGES_INPUT));
