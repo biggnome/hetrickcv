@@ -47,28 +47,33 @@ struct FlipPan : Module
 
 void FlipPan::process(const ProcessArgs &args)
 {
-	float inL = inputs[LEFT_INPUT].getVoltage();
-	float inR = inputs[RIGHT_INPUT].getVoltage();
+	int channels = inputs[LEFT_INPUT].getChannels();
+	for (int c = 0; c < channels; c++) {
+		float inL = inputs[LEFT_INPUT].getPolyVoltage(c);
+		float inR = inputs[RIGHT_INPUT].getPolyVoltage(c);
 
-    bool linear = (params[STYLE_PARAM].getValue() == 0.0f);
+	    bool linear = (params[STYLE_PARAM].getValue() == 0.0f);
 
-    float pan = params[AMOUNT_PARAM].getValue() + (inputs[AMOUNT_INPUT].getVoltage() * params[SCALE_PARAM].getValue());
-    pan = clamp(pan, 0.0f, 5.0f) * 0.2f;
+	    float pan = params[AMOUNT_PARAM].getValue() + (inputs[AMOUNT_INPUT].getPolyVoltage(c) * params[SCALE_PARAM].getValue());
+	    pan = clamp(pan, 0.0f, 5.0f) * 0.2f;
 
-    if(linear)
-    {
-        outputs[LEFT_OUTPUT].setVoltage(LERP(pan, inR, inL));
-        outputs[RIGHT_OUTPUT].setVoltage(LERP(pan, inL, inR));
-    }
-    else
-    {
-        pan = (pan * 2.0f) - 1.0f;
-        const float panL = paraPanShape(1.0f - pan);
-        const float panR = paraPanShape(1.0f + pan);
+	    if(linear)
+	    {
+	        outputs[LEFT_OUTPUT].setVoltage(LERP(pan, inR, inL), c);
+	        outputs[RIGHT_OUTPUT].setVoltage(LERP(pan, inL, inR), c);
+	    }
+	    else
+	    {
+	        pan = (pan * 2.0f) - 1.0f;
+	        const float panL = paraPanShape(1.0f - pan);
+	        const float panR = paraPanShape(1.0f + pan);
 
-        outputs[LEFT_OUTPUT].setVoltage((inL * panL) + (inR * panR));
-        outputs[RIGHT_OUTPUT].setVoltage((inL * panR) + (inR * panL));
-    }
+	        outputs[LEFT_OUTPUT].setVoltage((inL * panL) + (inR * panR), c);
+	        outputs[RIGHT_OUTPUT].setVoltage((inL * panR) + (inR * panL), c);
+	    }
+	}
+	outputs[LEFT_OUTPUT].setChannels(channels);
+	outputs[RIGHT_OUTPUT].setChannels(channels);
 }
 
 struct CKSSRot : SvgSwitch {
@@ -100,17 +105,17 @@ FlipPanWidget::FlipPanWidget(FlipPan *module)
 
 	//////PARAMS//////
 	addParam(createParam<Davies1900hBlackKnob>(Vec(27, 62), module, FlipPan::AMOUNT_PARAM));
-    addParam(createParam<Trimpot>(Vec(36, 112), module, FlipPan::SCALE_PARAM));
-    addParam(createParam<CKSSRot>(Vec(35, 200), module, FlipPan::STYLE_PARAM));
+	addParam(createParam<Trimpot>(Vec(36, 112), module, FlipPan::SCALE_PARAM));
+	addParam(createParam<CKSSRot>(Vec(35, 200), module, FlipPan::STYLE_PARAM));
 
 	//////INPUTS//////
-    addInput(createInput<PJ301MPort>(Vec(10, 235), module, FlipPan::LEFT_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(55, 235), module, FlipPan::RIGHT_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(33, 145), module, FlipPan::AMOUNT_INPUT));
+	addInput(createInput<PJ301MPort>(Vec(10, 235), module, FlipPan::LEFT_INPUT));
+	addInput(createInput<PJ301MPort>(Vec(55, 235), module, FlipPan::RIGHT_INPUT));
+	addInput(createInput<PJ301MPort>(Vec(33, 145), module, FlipPan::AMOUNT_INPUT));
 
 	//////OUTPUTS//////
-    addOutput(createOutput<PJ301MPort>(Vec(10, 285), module, FlipPan::LEFT_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(55, 285), module, FlipPan::RIGHT_OUTPUT));
+	addOutput(createOutput<PJ301MPort>(Vec(10, 285), module, FlipPan::LEFT_OUTPUT));
+	addOutput(createOutput<PJ301MPort>(Vec(55, 285), module, FlipPan::RIGHT_OUTPUT));
 }
 
 Model *modelFlipPan = createModel<FlipPan, FlipPanWidget>("FlipPan");
