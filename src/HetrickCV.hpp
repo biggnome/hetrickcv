@@ -28,3 +28,9 @@ extern Model *modelRandomGates;
 extern Model *modelRotator;
 extern Model *modelScanner;
 extern Model *modelWaveshape;
+
+struct Davies1900hBlackSnapKnob : Davies1900hBlackKnob {
+	Davies1900hBlackSnapKnob() {
+		snap = true;
+	}
+};
