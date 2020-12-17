@@ -25,7 +25,7 @@ struct Waveshape : Module
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
 		configParam(Waveshape::AMOUNT_PARAM, -5.0, 5.0, 0.0, "Amount");
-		configParam(Waveshape::SCALE_PARAM, -1.0, 1.0, 1.0, "Scale");
+		configParam(Waveshape::SCALE_PARAM, -1.0, 1.0, 1.0, "Mod");
 		configParam(Waveshape::RANGE_PARAM, 0.0, 1.0, 0.0, "Range", "V", 0.0, 5.0, 5.0);
 	}
 
