@@ -64,10 +64,10 @@ struct AnalogToDigital : Module
 	AnalogToDigital()
 	{
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-        configParam(AnalogToDigital::MODE_PARAM, 0.0, 1.0, 0.0, "");
-        configParam(AnalogToDigital::RECTIFY_PARAM, 0.0, 1.0, 0.0, "");
-        configParam(AnalogToDigital::SCALE_PARAM, -1.0, 1.0, 0.2, "");
-        configParam(AnalogToDigital::OFFSET_PARAM, -5.0, 5.0, 0.0, "");
+        configParam(AnalogToDigital::MODE_PARAM, 0.0, 1.0, 0.0, "Mode");
+        configParam(AnalogToDigital::RECTIFY_PARAM, 0.0, 1.0, 0.0, "Rectify");
+        configParam(AnalogToDigital::SCALE_PARAM, -1.0, 1.0, 1.0, "Scale");
+        configParam(AnalogToDigital::OFFSET_PARAM, -5.0, 5.0, 0.0, "Offset");
 	}
 
     void process(const ProcessArgs &args) override;

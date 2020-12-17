@@ -26,9 +26,9 @@ struct FlipPan : Module
 	FlipPan()
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(FlipPan::AMOUNT_PARAM, 0.0, 5.0, 2.5, "");
-		configParam(FlipPan::SCALE_PARAM, -1.0, 1.0, 1.0, "");
-		configParam(FlipPan::STYLE_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(FlipPan::AMOUNT_PARAM, 0.0, 5.0, 2.5, "Amount");
+		configParam(FlipPan::SCALE_PARAM, -1.0, 1.0, 1.0, "Scale");
+		configParam(FlipPan::STYLE_PARAM, 0.0, 1.0, 0.0, "Style");
 	}
 
     void process(const ProcessArgs &args) override;

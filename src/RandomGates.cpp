@@ -53,9 +53,9 @@ struct RandomGates : Module
 	RandomGates()
 	{
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-        configParam(RandomGates::MIN_PARAM, 0, 7.0, 0.0, "");
-        configParam(RandomGates::MAX_PARAM, 0, 7.0, 7.0, "");
-        configParam(RandomGates::MODE_PARAM, 0.0, 1.0, 0.0, "");
+        configParam(RandomGates::MIN_PARAM, 0, 7.0, 0.0, "Min", "", 1.0);
+        configParam(RandomGates::MAX_PARAM, 0, 7.0, 7.0, "Max", "", 1.0);
+        configParam(RandomGates::MODE_PARAM, 0.0, 1.0, 0.0, "Mode");
 	}
 
     void process(const ProcessArgs &args) override;

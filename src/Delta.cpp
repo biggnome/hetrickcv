@@ -36,8 +36,8 @@ struct Delta : Module
 	Delta()
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(Delta::AMOUNT_PARAM, 0.0, 5.0, 0.0, "");
-		configParam(Delta::SCALE_PARAM, -1.0, 1.0, 1.0, "");
+		configParam(Delta::AMOUNT_PARAM, 0.0, 5.0, 0.0, "Amount");
+		configParam(Delta::SCALE_PARAM, -1.0, 1.0, 1.0, "Scale");
 	}
 
 	TriggerGenWithSchmitt ltTrig, gtTrig;

@@ -24,9 +24,9 @@ struct Bitshift : Module
 	Bitshift()
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(Bitshift::AMOUNT_PARAM, -5.0, 5.0, 0.0, "");
-		configParam(Bitshift::SCALE_PARAM, -1.0, 1.0, 1.0, "");
-		configParam(Bitshift::RANGE_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(Bitshift::AMOUNT_PARAM, -5.0, 5.0, 0.0, "Amount");
+		configParam(Bitshift::SCALE_PARAM, -1.0, 1.0, 1.0, "Scale");
+		configParam(Bitshift::RANGE_PARAM, 0.0, 1.0, 0.0, "Range", "V", 0.0, 5.0, 5.0);
 	}
 
 	void process(const ProcessArgs &args) override;

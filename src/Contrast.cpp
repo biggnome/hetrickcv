@@ -24,9 +24,9 @@ struct Contrast : Module
 	Contrast()
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(Contrast::AMOUNT_PARAM, 0, 5.0, 0.0, "");
-		configParam(Contrast::SCALE_PARAM, -1.0, 1.0, 1.0, "");
-		configParam(Contrast::RANGE_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(Contrast::AMOUNT_PARAM, 0, 5.0, 0.0, "Amount");
+		configParam(Contrast::SCALE_PARAM, -1.0, 1.0, 1.0, "Scale");
+		configParam(Contrast::RANGE_PARAM, 0.0, 1.0, 0.0, "Range", "V", 0.0, 5.0, 5.0);
 	}
 
 	void process(const ProcessArgs &args) override;

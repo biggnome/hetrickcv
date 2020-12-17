@@ -24,9 +24,9 @@ struct Exponent : Module
 	Exponent()
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(Exponent::AMOUNT_PARAM, -5.0, 5.0, 0.0, "");
-		configParam(Exponent::SCALE_PARAM, -1.0, 1.0, 1.0, "");
-		configParam(Exponent::RANGE_PARAM, 0.0, 1.0, 0.0, "");
+		configParam(Exponent::AMOUNT_PARAM, -5.0, 5.0, 0.0, "Amount");
+		configParam(Exponent::SCALE_PARAM, -1.0, 1.0, 1.0, "Scale");
+		configParam(Exponent::RANGE_PARAM, 0.0, 1.0, 0.0, "Range", "V", 0.0, 5.0, 5.0);
 	}
 
 	void process(const ProcessArgs &args) override;

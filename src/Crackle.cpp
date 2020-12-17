@@ -29,8 +29,8 @@ struct Crackle : Module
 	Crackle()
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(Crackle::RATE_PARAM, 0.0, 2.0, 1.7, "");
-		configParam(Crackle::BROKEN_PARAM, 0.0, 1.0, 1.0, "");
+		configParam(Crackle::RATE_PARAM, 0.0, 2.0, 1.7, "Chaos");
+		configParam(Crackle::BROKEN_PARAM, 0.0, 1.0, 1.0, "Mode");
 
 		y1 = random::uniform();
 		y2 = 0.0f;
