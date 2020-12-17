@@ -49,18 +49,25 @@ struct TwoToFour : Module
 
 void TwoToFour::process(const ProcessArgs &args)
 {
-    const float inA = inputs[INA_INPUT].getVoltage();
-    const float inB = inputs[INB_INPUT].getVoltage();
+	int channels = inputs[INA_INPUT].getChannels();
+	for (int c = 0; c < channels; c++) {
+	    const float inA = inputs[INA_INPUT].getPolyVoltage(c);
+	    const float inB = inputs[INB_INPUT].getPolyVoltage(c);
 
-    outs[0] = inA + inB;
-    outs[1] = outs[0] * -1.0f;
-    outs[3] = inA - inB;
-    outs[2] = outs[3] * -1.0f;
+	    outs[0] = inA + inB;
+	    outs[1] = outs[0] * -1.0f;
+	    outs[3] = inA - inB;
+	    outs[2] = outs[3] * -1.0f;
 
-    outputs[OUT1_OUTPUT].setVoltage(outs[0]);
-    outputs[OUT2_OUTPUT].setVoltage(outs[1]);
-    outputs[OUT3_OUTPUT].setVoltage(outs[2]);
-	outputs[OUT4_OUTPUT].setVoltage(outs[3]);
+	    outputs[OUT1_OUTPUT].setVoltage(outs[0], c);
+	    outputs[OUT2_OUTPUT].setVoltage(outs[1], c);
+	    outputs[OUT3_OUTPUT].setVoltage(outs[2], c);
+		outputs[OUT4_OUTPUT].setVoltage(outs[3], c);
+	}
+	outputs[OUT1_OUTPUT].setChannels(channels);
+	outputs[OUT2_OUTPUT].setChannels(channels);
+	outputs[OUT3_OUTPUT].setChannels(channels);
+	outputs[OUT4_OUTPUT].setChannels(channels);
 
 	lights[OUT1_POS_LIGHT].setSmoothBrightness(fmaxf(0.0, outs[0] / 5.0), 10);
     lights[OUT1_NEG_LIGHT].setSmoothBrightness(fmaxf(0.0, -outs[0] / 5.0), 10);
