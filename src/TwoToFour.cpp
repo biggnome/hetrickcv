@@ -69,17 +69,18 @@ void TwoToFour::process(const ProcessArgs &args)
 	outputs[OUT3_OUTPUT].setChannels(channels);
 	outputs[OUT4_OUTPUT].setChannels(channels);
 
+	// Todo: read from channel 0 only
 	lights[OUT1_POS_LIGHT].setSmoothBrightness(fmaxf(0.0, outs[0] / 5.0), 10);
-    lights[OUT1_NEG_LIGHT].setSmoothBrightness(fmaxf(0.0, -outs[0] / 5.0), 10);
+	lights[OUT1_NEG_LIGHT].setSmoothBrightness(fmaxf(0.0, -outs[0] / 5.0), 10);
 
-    lights[OUT2_POS_LIGHT].setSmoothBrightness(fmaxf(0.0, outs[1] / 5.0), 10);
-    lights[OUT2_NEG_LIGHT].setSmoothBrightness(fmaxf(0.0, -outs[1] / 5.0), 10);
+	lights[OUT2_POS_LIGHT].setSmoothBrightness(fmaxf(0.0, outs[1] / 5.0), 10);
+	lights[OUT2_NEG_LIGHT].setSmoothBrightness(fmaxf(0.0, -outs[1] / 5.0), 10);
 
-    lights[OUT3_POS_LIGHT].setSmoothBrightness(fmaxf(0.0, outs[2] / 5.0), 10);
-    lights[OUT3_NEG_LIGHT].setSmoothBrightness(fmaxf(0.0, -outs[2] / 5.0), 10);
+	lights[OUT3_POS_LIGHT].setSmoothBrightness(fmaxf(0.0, outs[2] / 5.0), 10);
+	lights[OUT3_NEG_LIGHT].setSmoothBrightness(fmaxf(0.0, -outs[2] / 5.0), 10);
 
-    lights[OUT4_POS_LIGHT].setSmoothBrightness(fmaxf(0.0, outs[3] / 5.0), 10);
-    lights[OUT4_NEG_LIGHT].setSmoothBrightness(fmaxf(0.0, -outs[3] / 5.0), 10);
+	lights[OUT4_POS_LIGHT].setSmoothBrightness(fmaxf(0.0, outs[3] / 5.0), 10);
+	lights[OUT4_NEG_LIGHT].setSmoothBrightness(fmaxf(0.0, -outs[3] / 5.0), 10);
 }
 
 struct TwoToFourWidget : ModuleWidget { TwoToFourWidget(TwoToFour *module); };
