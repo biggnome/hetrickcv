@@ -58,10 +58,10 @@ void ASR::process(const ProcessArgs &args)
             stages[0] = inputs[MAIN_INPUT].getPolyVoltage(c);
         }
 
-        outputs[STAGE1_OUTPUT].setVoltage(stages[0]);
-        outputs[STAGE2_OUTPUT].setVoltage(stages[1]);
-        outputs[STAGE3_OUTPUT].setVoltage(stages[2]);
-        outputs[STAGE4_OUTPUT].setVoltage(stages[3]);
+        outputs[STAGE1_OUTPUT].setVoltage(stages[0], c);
+        outputs[STAGE2_OUTPUT].setVoltage(stages[1], c);
+        outputs[STAGE3_OUTPUT].setVoltage(stages[2], c);
+        outputs[STAGE4_OUTPUT].setVoltage(stages[3], c);
     }
 
     outputs[STAGE1_OUTPUT].setChannels(channels);
