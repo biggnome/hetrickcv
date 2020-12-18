@@ -24,7 +24,7 @@ struct Waveshape : Module
 	Waveshape()
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(Waveshape::AMOUNT_PARAM, -5.0, 5.0, 0.0, "Amount");
+		configParam(Waveshape::AMOUNT_PARAM, -5.0, 5.0, 0.0, "Amount", "", 0.0, 0.2);
 		configParam(Waveshape::SCALE_PARAM, -1.0, 1.0, 1.0, "Mod");
 		configParam(Waveshape::RANGE_PARAM, 0.0, 1.0, 0.0, "Range", "V", 0.0, 5.0, 5.0);
 	}
@@ -40,26 +40,31 @@ struct Waveshape : Module
 
 void Waveshape::process(const ProcessArgs &args)
 {
-	float input = inputs[MAIN_INPUT].getVoltage();
-
     bool mode5V = (params[RANGE_PARAM].getValue() == 0.0f);
-    if(mode5V) input = clamp(input, -5.0f, 5.0f) * 0.2f;
-	else input = clamp(input, -10.0f, 10.0f) * 0.1f;
 
-	float shape = params[AMOUNT_PARAM].getValue() + (inputs[AMOUNT_INPUT].getVoltage() * params[SCALE_PARAM].getValue());
-	shape = clamp(shape, -5.0f, 5.0f) * 0.2f;
-	shape *= 0.99f;
+    int channels = inputs[MAIN_INPUT].getChannels();
+    for (int c = 0; c < channels; c++) {
+		float input = inputs[MAIN_INPUT].getPolyVoltage(c);
 
-	const float shapeB = (1.0 - shape) / (1.0 + shape);
-	const float shapeA = (4.0 * shape) / ((1.0 - shape) * (1.0 + shape));
+	    if(mode5V) input = clamp(input, -5.0f, 5.0f) * 0.2f;
+		else input = clamp(input, -10.0f, 10.0f) * 0.1f;
 
-	float output = input * (shapeA + shapeB);
-	output = output / ((std::abs(input) * shapeA) + shapeB);
+		float shape = params[AMOUNT_PARAM].getValue() + (inputs[AMOUNT_INPUT].getPolyVoltage(c) * params[SCALE_PARAM].getValue());
+		shape = clamp(shape, -5.0f, 5.0f) * 0.198f;
 
-    if(mode5V) output *= 5.0f;
-    else output *= 10.0f;
+		float shapeB = (1.0 - shape) / (1.0 + shape);
+		float shapeA = (4.0 * shape) / ((1.0 - shape) * (1.0 + shape));
 
-    outputs[MAIN_OUTPUT].setVoltage(output);
+		float output = input * (shapeA + shapeB);
+		output = output / ((std::abs(input) * shapeA) + shapeB);
+
+	    if(mode5V) output *= 5.0f;
+	    else output *= 10.0f;
+
+	    outputs[MAIN_OUTPUT].setVoltage(output, c);
+	}
+
+	outputs[MAIN_OUTPUT].setChannels(channels);
 }
 
 struct CKSSRot : SvgSwitch {
