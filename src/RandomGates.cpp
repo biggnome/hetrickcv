@@ -53,8 +53,8 @@ struct RandomGates : Module
 	RandomGates()
 	{
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-        configParam(RandomGates::MIN_PARAM, 0, 7.0, 0.0, "Min", "", 1.0);
-        configParam(RandomGates::MAX_PARAM, 0, 7.0, 7.0, "Max", "", 1.0);
+        configParam(RandomGates::MIN_PARAM, 0, 7.0, 0.0, "Min", "", 0, 1, 1);
+        configParam(RandomGates::MAX_PARAM, 0, 7.0, 7.0, "Max", "", 0, 1, 1);
         configParam(RandomGates::MODE_PARAM, 0.0, 1.0, 0.0, "Mode");
 	}
 
@@ -117,7 +117,7 @@ void RandomGates::process(const ProcessArgs &args)
 
     if (min > max) min = max;
 
-    const bool clockHigh = inputs[CLOCK_INPUT].getVoltage() > 1.0f;
+    bool clockHigh = inputs[CLOCK_INPUT].getVoltage() > 1.0f;
 
     if (modeTrigger.process(params[MODE_PARAM].getValue()))
     {
@@ -205,11 +205,11 @@ RandomGatesWidget::RandomGatesWidget(RandomGates *module)
     const int inLightX = 45;
 
 
-    addInput(createInput<PJ301MPort>(Vec(58, 90), module, RandomGates::CLOCK_INPUT));
-    addParam(createParam<Davies1900hBlackKnob>(Vec(10, 145), module, RandomGates::MIN_PARAM));
-    addParam(createParam<Davies1900hBlackKnob>(Vec(10, 205), module, RandomGates::MAX_PARAM));
-    addInput(createInput<PJ301MPort>(Vec(58, 150), module, RandomGates::MINI_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(58, 210), module, RandomGates::MAXI_INPUT));
+    addInput(createInput<PJ301MPort>(Vec(58, 75), module, RandomGates::CLOCK_INPUT));
+    addParam(createParam<Davies1900hBlackSnapKnob>(Vec(11, 128), module, RandomGates::MIN_PARAM));
+    addParam(createParam<Davies1900hBlackSnapKnob>(Vec(11, 187), module, RandomGates::MAX_PARAM));
+    addInput(createInput<PJ301MPort>(Vec(58, 133), module, RandomGates::MINI_INPUT));
+    addInput(createInput<PJ301MPort>(Vec(58, 193), module, RandomGates::MAXI_INPUT));
 
     addParam(createParam<CKD6>(Vec(56, 270), module, RandomGates::MODE_PARAM));
 
