@@ -24,8 +24,8 @@ struct Bitshift : Module
 	Bitshift()
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(Bitshift::AMOUNT_PARAM, -5.0, 5.0, 0.0, "Amount");
-		configParam(Bitshift::SCALE_PARAM, -1.0, 1.0, 1.0, "Scale");
+		configParam(Bitshift::AMOUNT_PARAM, -31.0, 31.0, 0.0, "Shift");
+		configParam(Bitshift::SCALE_PARAM, -1.0, 1.0, 1.0, "Mod");
 		configParam(Bitshift::RANGE_PARAM, 0.0, 1.0, 0.0, "Range", "V", 0.0, 5.0, 5.0);
 	}
 
@@ -40,34 +40,40 @@ struct Bitshift : Module
 
 void Bitshift::process(const ProcessArgs &args)
 {
-	float input = inputs[MAIN_INPUT].getVoltage();
+	float bshift = params[AMOUNT_PARAM].getValue() / 31 * 5.0f;
+	bool mode5V = (params[RANGE_PARAM].getValue() == 0.0f);
 
-    bool mode5V = (params[RANGE_PARAM].getValue() == 0.0f);
-    if(mode5V) input = clamp(input, -5.0f, 5.0f) * 0.2f;
-	else input = clamp(input, -10.0f, 10.0f) * 0.1f;
+	int channels = inputs[MAIN_INPUT].getChannels();
+	for (int c = 0; c < channels; c++) {
+		float input = inputs[MAIN_INPUT].getPolyVoltage(c);
 
-	float shift = params[AMOUNT_PARAM].getValue() + (inputs[AMOUNT_INPUT].getVoltage() * params[SCALE_PARAM].getValue());
-	shift = clamp(shift, -5.0f, 5.0f) * 0.2f;
-	shift *= 31.0f;
+	    if(mode5V) input = clamp(input, -5.0f, 5.0f) * 0.2f;
+		else input = clamp(input, -10.0f, 10.0f) * 0.1f;
 
-	int finalShift = round(shift);
-	int intInput = round(input * 2147483647.0f);
-	int shiftedInput;
+		float shift = bshift + (inputs[AMOUNT_INPUT].getPolyVoltage(c) * params[SCALE_PARAM].getValue());
+		shift = clamp(shift, -5.0f, 5.0f) * 0.2f;
+		shift *= 31.0f;
 
-	if(finalShift > 0) shiftedInput = intInput >> finalShift;
-	else
-	{
-		finalShift *= -1;
-		shiftedInput = intInput << finalShift;
+		int finalShift = round(shift);
+		int intInput = round(input * 2147483647.0f);
+		int shiftedInput;
+
+		if(finalShift > 0) shiftedInput = intInput >> finalShift;
+		else
+		{
+			finalShift *= -1;
+			shiftedInput = intInput << finalShift;
+		}
+
+		float output = shiftedInput/2147483647.0f;
+		output = clamp(output, -1.0f, 1.0f);
+
+	    if(mode5V) output *= 5.0f;
+	    else output *= 10.0f;
+
+	    outputs[MAIN_OUTPUT].setVoltage(output, c);
 	}
-
-	float output = shiftedInput/2147483647.0f;
-	output = clamp(output, -1.0f, 1.0f);
-
-    if(mode5V) output *= 5.0f;
-    else output *= 10.0f;
-
-    outputs[MAIN_OUTPUT].setVoltage(output);
+	outputs[MAIN_OUTPUT].setChannels(channels);
 }
 
 struct CKSSRot : SvgSwitch {
@@ -98,7 +104,7 @@ BitshiftWidget::BitshiftWidget(Bitshift *module)
 	addChild(createWidget<ScrewSilver>(Vec(box.size.x - 30, 365)));
 
 	//////PARAMS//////
-	addParam(createParam<Davies1900hBlackKnob>(Vec(27, 62), module, Bitshift::AMOUNT_PARAM));
+	addParam(createParam<Davies1900hBlackSnapKnob>(Vec(27, 62), module, Bitshift::AMOUNT_PARAM));
     addParam(createParam<Trimpot>(Vec(36, 112), module, Bitshift::SCALE_PARAM));
     addParam(createParam<CKSSRot>(Vec(35, 200), module, Bitshift::RANGE_PARAM));
 
