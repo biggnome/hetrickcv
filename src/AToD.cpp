@@ -8,6 +8,7 @@ struct AnalogToDigital : Module
         OFFSET_PARAM,
         MODE_PARAM,
         RECTIFY_PARAM,
+        COMP_PARAM,
 
 		NUM_PARAMS
 	};
@@ -49,15 +50,27 @@ struct AnalogToDigital : Module
         MODE_BOFF_LIGHT,
         MODE_BSIG_LIGHT,
 
+        COMP_LIN_LIGHT,
+        COMP_A_LIGHT,
+        COMP_M_LIGHT,
+
 		NUM_LIGHTS
     };
 
     dsp::SchmittTrigger clockTrigger;
     dsp::SchmittTrigger modeTrigger;
     dsp::SchmittTrigger rectTrigger;
+    dsp::SchmittTrigger compTrigger;
 
     int mode = 0;
     int rectMode = 0;
+    int compMode = 0;
+
+    int sgn(float v) {
+      return (v > 0) - (v < 0);
+    }
+    const float mu = 255.0;
+    const float A = 87.6;
 
     float outs[8] = {};
 
@@ -66,7 +79,8 @@ struct AnalogToDigital : Module
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
         configParam(AnalogToDigital::MODE_PARAM, 0.0, 1.0, 0.0, "Mode");
         configParam(AnalogToDigital::RECTIFY_PARAM, 0.0, 1.0, 0.0, "Rectify");
-        configParam(AnalogToDigital::SCALE_PARAM, -1.0, 1.0, 1.0, "Scale");
+        configParam(AnalogToDigital::COMP_PARAM, 0.0, 1.0, 0.0, "Compansion");
+        configParam(AnalogToDigital::SCALE_PARAM, -2.0, 2.0, 1.0, "Scale");
         configParam(AnalogToDigital::OFFSET_PARAM, -5.0, 5.0, 0.0, "Offset");
 	}
 
@@ -78,13 +92,15 @@ struct AnalogToDigital : Module
 
     void onReset() override
     {
-        mode = 0;
+        mode = 2;
         rectMode = 0;
+        compMode = 0;
 	}
     void onRandomize() override
     {
         mode = round(random::uniform() * 2.0f);
         rectMode = round(random::uniform() * 2.0f);
+        compMode = round(random::uniform() * 2.0f);
     }
 
     json_t *dataToJson() override
@@ -92,6 +108,7 @@ struct AnalogToDigital : Module
 		json_t *rootJ = json_object();
         json_object_set_new(rootJ, "mode", json_integer(mode));
         json_object_set_new(rootJ, "rectMode", json_integer(rectMode));
+        json_object_set_new(rootJ, "compMode", json_integer(compMode));
 		return rootJ;
 	}
     void dataFromJson(json_t *rootJ) override
@@ -103,6 +120,10 @@ struct AnalogToDigital : Module
         json_t *rectModeJ = json_object_get(rootJ, "rectMode");
         if (rectModeJ)
             rectMode = json_integer_value(rectModeJ);
+
+        json_t *compModeJ = json_object_get(rootJ, "compMode");
+        if (compModeJ)
+            compMode = json_integer_value(compModeJ);
 	}
 
 	// For more advanced Module features, read Rack's engine.hpp header file
@@ -116,6 +137,7 @@ void AnalogToDigital::process(const ProcessArgs &args)
 {
     if (modeTrigger.process(params[MODE_PARAM].getValue())) mode = (mode + 1) % 3;
     if (rectTrigger.process(params[RECTIFY_PARAM].getValue())) rectMode = (rectMode + 1) % 3;
+    if (compTrigger.process(params[COMP_PARAM].getValue())) compMode = (compMode +1) % 3;
 
     lights[MODE_UNI8_LIGHT].setBrightness(mode == 0 ? 1.0f : 0.0f);
     lights[MODE_BOFF_LIGHT].setBrightness(mode == 1 ? 1.0f : 0.0f);
@@ -125,16 +147,29 @@ void AnalogToDigital::process(const ProcessArgs &args)
     lights[RECT_HALF_LIGHT].setBrightness(rectMode == 1 ? 1.0f : 0.0f);
     lights[RECT_FULL_LIGHT].setBrightness(rectMode == 2 ? 1.0f : 0.0f);
 
+    lights[COMP_LIN_LIGHT].setBrightness(compMode == 0 ? 1.0f : 0.0f);
+    lights[COMP_A_LIGHT].setBrightness(compMode == 1 ? 1.0f : 0.0f);
+    lights[COMP_M_LIGHT].setBrightness(compMode == 2 ? 1.0f : 0.0f);
+
     const bool syncModeEnabled = inputs[SYNC_INPUT].isConnected();
     const bool readyForProcess = (!syncModeEnabled || (syncModeEnabled && clockTrigger.process(inputs[SYNC_INPUT].getVoltage())));
 
     if(readyForProcess)
     {
         float input = inputs[MAIN_INPUT].getVoltage();
-        input *= params[SCALE_PARAM].getValue();
+        input *= params[SCALE_PARAM].getValue() * 0.2f;
         input += params[OFFSET_PARAM].getValue();
         if (rectMode == 1) input = input > 0.0f? input : 0.0f;
         else if (rectMode == 2) input = std::abs(input);
+
+        if (compMode == 1) {
+        	float absx = std::abs(input);
+        	if (absx < (1 / A)) input = std::abs((A * absx) / (1 + log(A))) * sgn(input);
+        	else input = std::abs((1 + log(A * absx)) / (1 + log(A))) * sgn(input);
+        }
+        else if (compMode == 2) {
+        	input = std::abs((log(1 + mu * std::abs(input))) / (log(mu + 1))) * sgn(input);
+        }
 
         if(mode == 0) processUni8(input);
         else if (mode == 1) processBiOff(input);
@@ -219,6 +254,7 @@ AnalogToDigitalWidget::AnalogToDigitalWidget(AnalogToDigital *module)
     //////PARAMS//////
     addParam(createParam<CKD6>(Vec(16, 270), module, AnalogToDigital::MODE_PARAM));
     addParam(createParam<CKD6>(Vec(65, 270), module, AnalogToDigital::RECTIFY_PARAM));
+    addParam(createParam<CKD6>(Vec(65, 170), module, AnalogToDigital::COMP_PARAM));
 
     //////BLINKENLIGHTS//////
     int modeLightX = 12;
@@ -231,9 +267,14 @@ AnalogToDigitalWidget::AnalogToDigitalWidget(AnalogToDigital *module)
     addChild(createLight<SmallLight<RedLight>>(Vec(rectLightX, 319), module, AnalogToDigital::RECT_HALF_LIGHT));
     addChild(createLight<SmallLight<RedLight>>(Vec(rectLightX, 332), module, AnalogToDigital::RECT_FULL_LIGHT));
 
+    int compLightX = 64;
+    addChild(createLight<SmallLight<RedLight>>(Vec(compLightX, 206), module, AnalogToDigital::COMP_LIN_LIGHT));
+    addChild(createLight<SmallLight<RedLight>>(Vec(compLightX, 219), module, AnalogToDigital::COMP_A_LIGHT));
+    addChild(createLight<SmallLight<RedLight>>(Vec(compLightX, 232), module, AnalogToDigital::COMP_M_LIGHT));
+
     //////INPUTS//////
     addInput(createInput<PJ301MPort>(Vec(7, 70), module, AnalogToDigital::MAIN_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(42, 152), module, AnalogToDigital::SYNC_INPUT));
+    addInput(createInput<PJ301MPort>(Vec(15, 152), module, AnalogToDigital::SYNC_INPUT));
 
     addParam(createParam<Trimpot>(Vec(44, 73), module, AnalogToDigital::SCALE_PARAM));
     addParam(createParam<Trimpot>(Vec(80, 73), module, AnalogToDigital::OFFSET_PARAM));
