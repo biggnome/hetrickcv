@@ -31,33 +31,61 @@ struct Contrast : Module
 
 	void process(const ProcessArgs &args) override;
 
+	const float twoPi = 2 * M_PI;
+	const float elevenOverSeven = 11 / 7;
+
+	//fast sine approximation pinched from gist.github.com/geraldyeo/988116
+	//1.27323954  = 4/pi
+	//0.405284735 =-4/(pi^2)
+	float fastSin(float x) {
+		float fsin = 0;
+		if (x < -3.14159265) x += 6.28318531;
+		else if (x >  3.14159265) x -= 6.28318531;
+
+		if (x < 0) {
+		    fsin = 1.27323954 * x + 0.405284735 * x * x;
+		    if (fsin < 0) fsin = .225 * (fsin *-fsin - fsin) + fsin;
+		    else fsin = .225 * (fsin * fsin - fsin) + fsin;
+		}
+		else {
+		    fsin = 1.27323954 * x - 0.405284735 * x * x;
+		    if (fsin < 0) fsin = .225 * (fsin *-fsin - fsin) + fsin;
+		    else fsin = .225 * (fsin * fsin - fsin) + fsin;
+		}
+		return fsin;
+	}
+
 	// For more advanced Module features, read Rack's engine.hpp header file
 	// - dataToJson, dataFromJson: serialization of internal data
 	// - onSampleRateChange: event triggered by a change of sample rate
 	// - reset, randomize: implements special behavior when user clicks these from the context menu
 };
 
-
 void Contrast::process(const ProcessArgs &args)
 {
-    float input = inputs[MAIN_INPUT].getVoltage();
-
     bool mode5V = (params[RANGE_PARAM].getValue() == 0.0f);
-    if(mode5V) input = clamp(input, -5.0f, 5.0f) * 0.2f;
-    else input = clamp(input, -10.0f, 10.0f) * 0.1f;
 
-    float contrast = params[AMOUNT_PARAM].getValue() + (inputs[AMOUNT_INPUT].getVoltage() * params[SCALE_PARAM].getValue());
-    contrast = clamp(contrast, 0.0f, 5.0f) * 0.2f;
+    int channels = inputs[MAIN_INPUT].getChannels();
+    for (int c = 0; c < channels; c++) {
+    	float input = inputs[MAIN_INPUT].getPolyVoltage(c);
 
-    const float factor1 = input * 1.57143;
-    const float factor2 = sinf(input * 6.28571) * contrast;
+	    if (mode5V) input = clamp(input, -5.0f, 5.0f) * 0.2f;
+	    else input = clamp(input, -10.0f, 10.0f) * 0.1f;
 
-    float output = sinf(factor1 + factor2);
+	    float contrast = params[AMOUNT_PARAM].getValue() + (inputs[AMOUNT_INPUT].getPolyVoltage(c) * params[SCALE_PARAM].getValue());
+	    contrast = clamp(contrast, 0.0f, 5.0f) * 0.2f;
 
-    if(mode5V) output *= 5.0f;
-    else output *= 10.0f;
+	    float factor1 = input * elevenOverSeven;
+	    float factor2 = fastSin(input * twoPi) * contrast;
 
-    outputs[MAIN_OUTPUT].setVoltage(output);
+	    float output = fastSin(factor1 + factor2);
+
+	    if (mode5V) output *= 5.0f;
+	    else output *= 10.0f;
+
+	    outputs[MAIN_OUTPUT].setVoltage(output, c);
+	}
+	outputs[MAIN_OUTPUT].setChannels(channels);
 }
 
 struct CKSSRot : SvgSwitch {
