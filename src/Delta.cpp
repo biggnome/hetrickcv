@@ -36,8 +36,8 @@ struct Delta : Module
 	Delta()
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-		configParam(Delta::AMOUNT_PARAM, 0.0, 5.0, 0.0, "Amount");
-		configParam(Delta::SCALE_PARAM, -1.0, 1.0, 1.0, "Scale");
+		configParam(Delta::AMOUNT_PARAM, 0.0, 1.0, 0.0, "Amount", "", 8000);
+		configParam(Delta::SCALE_PARAM, -1.0, 1.0, 1.0, "Mod");
 	}
 
 	TriggerGenWithSchmitt ltTrig, gtTrig;
@@ -51,6 +51,17 @@ struct Delta : Module
 	// - dataToJson, dataFromJson: serialization of internal data
 	// - onSampleRateChange: event triggered by a change of sample rate
 	// - reset, randomize: implements special behavior when user clicks these from the context menu
+
+	// faster powf() approximation cribbed from martin.ankerl.com/2007/10/04/optimized-pow-approximation-for-java-and-c-c/
+	double fastPow(double a, double b) {
+	    union {
+	        double d;
+	        int x[2];
+	    } u = { a };
+	    u.x[1] = (int)(b * (u.x[1] - 1072632447) + 1072632447);
+	    u.x[0] = 0;
+	    return u.d;
+	}
 };
 
 
@@ -64,8 +75,8 @@ void Delta::process(const ProcessArgs &args)
     rising = (delta > 0.0f);
     falling = (delta < 0.0f);
 
-	float boost = params[AMOUNT_PARAM].getValue() + (inputs[AMOUNT_INPUT].getVoltage() * params[SCALE_PARAM].getValue());
-	boost = clamp(boost, 0.0f, 5.0f) * 8000.0f + 1;
+	float boost = params[AMOUNT_PARAM].getValue() + (inputs[AMOUNT_INPUT].getVoltage() * 0.2 * params[SCALE_PARAM].getValue());
+	boost = fastPow(8000, clamp(boost, 0.0f, 1.0f));
 
 	outputs[GT_TRIG_OUTPUT].setVoltage(gtTrig.process(rising) ? 5.0f : 0.0f);
 	outputs[LT_TRIG_OUTPUT].setVoltage(ltTrig.process(falling) ? 5.0f : 0.0f);
