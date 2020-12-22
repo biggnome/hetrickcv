@@ -48,28 +48,19 @@ struct ASR : Module
 
 void ASR::process(const ProcessArgs &args)
 {
-    int channels = std::max(inputs[CLK_INPUT].getChannels(), inputs[MAIN_INPUT].getChannels());
-    for (int c = 0; c < channels; c++) {
-        if (clockTrigger.process(inputs[CLK_INPUT].getPolyVoltage(c)))
-        {
-            stages[3] = stages[2];
-            stages[2] = stages[1];
-            stages[1] = stages[0];
-            stages[0] = inputs[MAIN_INPUT].getPolyVoltage(c);
-        }
-
-        outputs[STAGE1_OUTPUT].setVoltage(stages[0], c);
-        outputs[STAGE2_OUTPUT].setVoltage(stages[1], c);
-        outputs[STAGE3_OUTPUT].setVoltage(stages[2], c);
-        outputs[STAGE4_OUTPUT].setVoltage(stages[3], c);
+    if (clockTrigger.process(inputs[CLK_INPUT].getVoltage()))
+    {
+        stages[3] = stages[2];
+        stages[2] = stages[1];
+        stages[1] = stages[0];
+        stages[0] = inputs[MAIN_INPUT].getVoltage();
     }
 
-    outputs[STAGE1_OUTPUT].setChannels(channels);
-    outputs[STAGE2_OUTPUT].setChannels(channels);
-    outputs[STAGE3_OUTPUT].setChannels(channels);
-    outputs[STAGE4_OUTPUT].setChannels(channels);
+    outputs[STAGE1_OUTPUT].setVoltage(stages[0]);
+    outputs[STAGE2_OUTPUT].setVoltage(stages[1]);
+    outputs[STAGE3_OUTPUT].setVoltage(stages[2]);
+    outputs[STAGE4_OUTPUT].setVoltage(stages[3]);
 
-    // Todo: read from channel 0 only
     lights[OUT1_POS_LIGHT].setSmoothBrightness(fmaxf(0.0, stages[0] / 5.0), 10);
     lights[OUT1_NEG_LIGHT].setSmoothBrightness(fmaxf(0.0, -stages[0] / 5.0), 10);
 
