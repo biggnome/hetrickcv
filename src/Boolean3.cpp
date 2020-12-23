@@ -42,7 +42,7 @@ struct Boolean3 : Module
     bool inA = false;
     bool inB = false;
     bool inC = false;
-    float outs[6] = {};
+    int outs[6] = {};
 
 	Boolean3()
 	{
@@ -60,40 +60,50 @@ struct Boolean3 : Module
 
 void Boolean3::process(const ProcessArgs &args)
 {
-    inA = ins[0].process(inputs[INA_INPUT].getVoltage());
-    inB = ins[1].process(inputs[INB_INPUT].getVoltage());
-    inC = ins[2].process(inputs[INC_INPUT].getVoltage());
+    int channels = std::max(std::max(inputs[INA_INPUT].getChannels(), inputs[INB_INPUT].getChannels()), inputs[INC_INPUT].getChannels());
+    for (int c = 0; c < channels; c++) {
+        inA = ins[0].process(inputs[INA_INPUT].getPolyVoltage(c));
+        inB = ins[1].process(inputs[INB_INPUT].getPolyVoltage(c));
+        inC = ins[2].process(inputs[INC_INPUT].getPolyVoltage(c));
 
-    lights[INA_LIGHT].value = inA ? 5.0f : 0.0f;
-    lights[INB_LIGHT].value = inB ? 5.0f : 0.0f;
-    lights[INC_LIGHT].value = inC ? 5.0f : 0.0f;
 
-    if(inputs[INC_INPUT].isConnected())
-    {
-        outs[0] = ((inA || inB) || inC) ? 5.0f : 0.0f;
-        outs[1] = ((inA && inB) && inC) ? 5.0f : 0.0f;
-        outs[2] = (!inA && (inB ^ inC)) || (inA && !(inB || inC)) ? 5.0f : 0.0f;
-        outs[3] = 5.0f - outs[0];
-        outs[4] = 5.0f - outs[1];
-        outs[5] = 5.0f - outs[2];
+        if(inputs[INC_INPUT].isConnected())
+        {
+            outs[0] = ((inA || inB) || inC) ? 10 : 0;
+            outs[1] = ((inA && inB) && inC) ? 10 : 0;
+            outs[2] = (!inA && (inB ^ inC)) || (inA && !(inB || inC)) ? 10 : 0;
+            outs[3] = 10 - outs[0];
+            outs[4] = 10 - outs[1];
+            outs[5] = 10 - outs[2];
+        }
+        else
+        {
+            outs[0] = (inA || inB) ? 10 : 0;
+            outs[1] = (inA && inB) ? 10 : 0;
+            outs[2] = (inA != inB) ? 10 : 0;
+            outs[3] = 10 - outs[0];
+            outs[4] = 10 - outs[1];
+            outs[5] = 10 - outs[2];
+        }
+
+        outputs[OR_OUTPUT].setVoltage(outs[0], c);
+        outputs[AND_OUTPUT].setVoltage(outs[1], c);
+        outputs[XOR_OUTPUT].setVoltage(outs[2], c);
+        outputs[NOR_OUTPUT].setVoltage(outs[3], c);
+        outputs[NAND_OUTPUT].setVoltage(outs[4], c);
+        outputs[XNOR_OUTPUT].setVoltage(outs[5], c);
     }
-    else
-    {
-        outs[0] = (inA || inB) ? 5.0f : 0.0f;
-        outs[1] = (inA && inB) ? 5.0f : 0.0f;
-        outs[2] = (inA != inB) ? 5.0f : 0.0f;
-        outs[3] = 5.0f - outs[0];
-        outs[4] = 5.0f - outs[1];
-        outs[5] = 5.0f - outs[2];
-    }
 
+    outputs[OR_OUTPUT].setChannels(channels);
+    outputs[AND_OUTPUT].setChannels(channels);
+    outputs[XOR_OUTPUT].setChannels(channels);
+    outputs[NOR_OUTPUT].setChannels(channels);
+    outputs[NAND_OUTPUT].setChannels(channels);
+    outputs[XNOR_OUTPUT].setChannels(channels);
 
-    outputs[OR_OUTPUT].setVoltage(outs[0]);
-    outputs[AND_OUTPUT].setVoltage(outs[1]);
-    outputs[XOR_OUTPUT].setVoltage(outs[2]);
-    outputs[NOR_OUTPUT].setVoltage(outs[3]);
-    outputs[NAND_OUTPUT].setVoltage(outs[4]);
-    outputs[XNOR_OUTPUT].setVoltage(outs[5]);
+    lights[INA_LIGHT].value = ins[0].process(inputs[INA_INPUT].getVoltage(0)) ? 10 : 0;
+    lights[INB_LIGHT].value = ins[1].process(inputs[INA_INPUT].getVoltage(0)) ? 10 : 0;
+    lights[INC_LIGHT].value = ins[2].process(inputs[INA_INPUT].getVoltage(0)) ? 10 : 0;
 
     lights[OR_LIGHT].value = outs[0];
     lights[AND_LIGHT].value = outs[1];
