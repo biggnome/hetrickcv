@@ -40,10 +40,11 @@
      inkscape:window-height="480"
      id="namedview103"
      showgrid="false"
-     inkscape:zoom="1.9342104"
+     inkscape:zoom="0.9671052"
      inkscape:cx="60"
-     inkscape:cy="190.00002"
-     inkscape:current-layer="svg8" />
+     inkscape:cy="29.145242"
+     inkscape:current-layer="svg8"
+     inkscape:document-rotation="0" />
   <title
      id="title2">LogicCombiner</title>
   <g
@@ -59,27 +60,27 @@
     <path
        d="M40.78415,374.57842H39.17823v-5.3311H33.10212v5.3311H31.49619V363.15468h1.60593v4.71853h6.07611v-4.71853h1.60592Z"
        transform="translate(0 0.00002)"
-       style="fill: #231f20"
+       style="fill:#000000"
        id="path6" />
     <path
        d="M48.99163,374.57842H42.17051V363.15468h6.68867v1.34109H43.77644v3.41052h4.8013v1.341h-4.8013v3.97347h5.21519Z"
        transform="translate(0 0.00002)"
-       style="fill: #231f20"
+       style="fill:#000000"
        id="path8" />
     <path
        d="M57.86514,364.49577H54.65329v10.08265h-1.606V364.49577H49.81891v-1.34109h8.04623Z"
        transform="translate(0 0.00002)"
-       style="fill: #231f20"
+       style="fill:#000000"
        id="path10" />
     <path
        d="M66.62163,374.57842H64.68452l-2.98-4.91715H60.47936v4.91715h-1.606V363.15468h3.22846a4.37321,4.37321,0,0,1,2.74834.79469A3.185,3.185,0,0,1,63.36,369.49568Zm-3.04632-9.70191a3.04678,3.04678,0,0,0-1.92045-.41389h-1.1755v3.87416h1.1755a3.15913,3.15913,0,0,0,1.92045-.39734,1.72715,1.72715,0,0,0,.72853-1.53971A1.69839,1.69839,0,0,0,63.57531,364.87651Z"
        transform="translate(0 0.00002)"
-       style="fill: #231f20"
+       style="fill:#000000"
        id="path12" />
     <path
        d="M69.41922,374.57842h-1.606V363.15468h1.606Z"
        transform="translate(0 0.00002)"
-       style="fill: #231f20"
+       style="fill:#000000"
        id="path14" />
     <path
        d="M80.54207,373.08834A5.35546,5.35546,0,0,1,76.37,374.77709a5.89516,5.89516,0,1,1,4.05617-10.28132l-.67879,1.29134a4.52731,4.52731,0,0,0-3.31122-1.39071,4.45825,4.45825,0,0,0,0,8.90722,4.52185,4.52185,0,0,0,3.41059-1.39072Z"
@@ -221,14 +222,15 @@
      style="fill: none;stroke: #000;stroke-miterlimit: 10"
      id="rect76" />
   <g
-     id="g82">
+     id="g82"
+     transform="translate(-0.15848595,0.04338083)">
     <path
-       d="M59.12305,44.83984H58.2832V34.40674h.83985Z"
-       transform="translate(0 0.00002)"
+       d="M 59.12305,44.83984 H 58.2832 v -10.4331 h 0.83985 z"
+       transform="translate(0,2e-5)"
        id="path78" />
     <path
-       d="M62.53027,44.83984h-.83886V34.40674h.83886Z"
-       transform="translate(0 0.00002)"
+       d="m 62.53027,44.83984 h -0.83886 v -10.4331 h 0.83886 z"
+       transform="translate(0,2e-5)"
        id="path80" />
   </g>
   <g

@@ -40,10 +40,10 @@
      inkscape:window-height="480"
      id="namedview169"
      showgrid="false"
-     inkscape:zoom="5.4707732"
+     inkscape:zoom="10.941546"
      inkscape:cx="44.999996"
-     inkscape:cy="204.62318"
-     inkscape:current-layer="svg8"
+     inkscape:cy="350.85479"
+     inkscape:current-layer="g22"
      inkscape:document-rotation="0" />
   <title
      id="title2">Contrast</title>
@@ -55,32 +55,39 @@
        transform="translate(0 0.00002)"
        style="fill: #f0f0f0" />
   </g>
+  <rect
+     style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.884521;stroke-miterlimit:10;paint-order:markers fill stroke;stop-color:#000000"
+     id="rect914"
+     width="89.999992"
+     height="16"
+     x="5.3290705e-15"
+     y="347.88577" />
   <g
      id="g22">
     <path
        d="M25.78415,361.57842H24.17823v-5.3311H18.10212v5.3311H16.49619V350.15468h1.60593v4.71854h6.07611v-4.71854h1.60593Z"
        transform="translate(0 0.00002)"
-       style="fill: #231f20"
+       style="fill:#f0f0f0;fill-opacity:1"
        id="path6" />
     <path
        d="M33.99163,361.57842H27.17051V350.15468h6.68867v1.34109H28.77644v3.41053h4.8013v1.341h-4.8013v3.97347h5.21519Z"
        transform="translate(0 0.00002)"
-       style="fill: #231f20"
+       style="fill:#f0f0f0;fill-opacity:1"
        id="path8" />
     <path
        d="M42.86514,351.49577H39.65329v10.08265h-1.606V351.49577H34.81891v-1.34109h8.04624Z"
        transform="translate(0 0.00002)"
-       style="fill: #231f20"
+       style="fill:#f0f0f0;fill-opacity:1"
        id="path10" />
     <path
        d="M51.62163,361.57842H49.68452l-2.98-4.91715H45.47936v4.91715h-1.606V350.15468h3.22846a4.37325,4.37325,0,0,1,2.74834.79469A3.185,3.185,0,0,1,48.36,356.49568Zm-3.04632-9.70191a3.04673,3.04673,0,0,0-1.92045-.41389h-1.1755v3.87416h1.1755a3.15908,3.15908,0,0,0,1.92045-.39735,1.72712,1.72712,0,0,0,.72853-1.5397A1.69838,1.69838,0,0,0,48.57531,351.87651Z"
        transform="translate(0 0.00002)"
-       style="fill: #231f20"
+       style="fill:#f0f0f0;fill-opacity:1"
        id="path12" />
     <path
        d="M54.41922,361.57842H52.81317V350.15468h1.60605Z"
        transform="translate(0 0.00002)"
-       style="fill: #231f20"
+       style="fill:#f0f0f0;fill-opacity:1"
        id="path14" />
     <path
        d="M65.54207,360.08834A5.35543,5.35543,0,0,1,61.37,361.77709a5.89517,5.89517,0,1,1,4.05617-10.28133l-.67878,1.29135a4.52732,4.52732,0,0,0-3.31122-1.39071,4.45825,4.45825,0,0,0,0,8.90722,4.52188,4.52188,0,0,0,3.41059-1.39071Z"
@@ -95,7 +102,8 @@
     <path
        d="M75.45235,361.57842H73.4987L69.70743,355.85l-1.1755,1.192v4.5364H66.92588V357.019l1.60605.023,1.1755-1.192,1.07613-1.192.61637.91363.49748.7374Z"
        transform="translate(0 0.00002)"
-       id="path20" />
+       id="path20"
+       style="fill:#f0f0f0;fill-opacity:1" />
   </g>
   <g
      id="g40">
