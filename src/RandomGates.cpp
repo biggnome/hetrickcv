@@ -137,9 +137,9 @@ void RandomGates::process(const ProcessArgs &args)
         }
     }
 
-    lights[MODE_TRIG_LIGHT].setBrightness(mode == 0 ? 1.0f : 0.0f);
-    lights[MODE_HOLD_LIGHT].setBrightness(mode == 1 ? 1.0f : 0.0f);
-    lights[MODE_GATE_LIGHT].setBrightness(mode == 2 ? 1.0f : 0.0f);
+    lights[MODE_TRIG_LIGHT].setBrightness(mode == 0 ? 1 : 0);
+    lights[MODE_HOLD_LIGHT].setBrightness(mode == 1 ? 1 : 0);
+    lights[MODE_GATE_LIGHT].setBrightness(mode == 2 ? 1 : 0);
 
     switch(mode)
     {
@@ -151,21 +151,21 @@ void RandomGates::process(const ProcessArgs &args)
                 trigger[i].trigger();
                 active[i] = false;
             }
-            outputs[i].setVoltage((trigger[i].process() ? 5.0f : 0.0f));
+            outputs[i].setVoltage((trigger[i].process() ? 10 : 0));
         }
         break;
 
         case 1: //hold mode
         for(int i = 0; i < 8; i++)
         {
-            outputs[i].setVoltage((active[i] ? 10.0f : 0.0f));
+            outputs[i].setVoltage((active[i] ? 10 : 0));
         }
         break;
 
         case 2: //gate mode
         for(int i = 0; i < 8; i++)
         {
-            outputs[i].setVoltage(((active[i] && clockHigh) ? 5.0f : 0.0f));
+            outputs[i].setVoltage(((active[i] && clockHigh) ? 10 : 0));
         }
         break;
 

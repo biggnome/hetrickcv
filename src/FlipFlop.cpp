@@ -33,7 +33,7 @@ struct FlipFlop : Module
 	};
 
     dsp::SchmittTrigger clockTrigger;
-    float outs[4] = {};
+    int outs[4] = {};
     bool toggle = false;
     bool dataIn = false;
 
@@ -63,19 +63,19 @@ struct FlipFlop : Module
 
 void FlipFlop::process(const ProcessArgs &args)
 {
-    dataIn = (inputs[IND_INPUT].getVoltage() >= 1.0f);
-    lights[DATA_LIGHT].value = dataIn ? 5.0f : 0.0f;
-    lights[TOGGLE_LIGHT].value = (inputs[INT_INPUT].getVoltage() >= 1.0f) ? 5.0f : 0.0f;
+    dataIn = (inputs[IND_INPUT].getVoltage(0) >= 1.0f);
+    lights[DATA_LIGHT].value = dataIn ? 10 : 0;
+    lights[TOGGLE_LIGHT].value = (inputs[INT_INPUT].getVoltage(0) >= 1.0f) ? 10 : 0;
 
     if (clockTrigger.process(inputs[INT_INPUT].getVoltage()))
     {
         toggle = !toggle;
 
-        outs[0] = toggle ? 5.0f : 0.0f;
-        outs[1] = lights[DATA_LIGHT].value;
+        outs[0] = toggle ? 10 : 0;
+        outs[1] = (inputs[IND_INPUT].getVoltage(0) >= 1.0f) ? 10 : 0;
 
-        outs[2] = 5.0f - outs[0];
-        outs[3] = 5.0f - outs[1];
+        outs[2] = 10 - outs[0];
+        outs[3] = 10 - outs[1];
     }
 
     outputs[FFT_OUTPUT].setVoltage(outs[0]);

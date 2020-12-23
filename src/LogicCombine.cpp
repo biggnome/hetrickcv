@@ -36,8 +36,7 @@ struct LogicCombine : Module
 
     bool ins[NUM_INPUTS] = {};
     bool trigs[NUM_INPUTS] = {};
-    float outs[3] = {};
-    float trigLight;
+    int outs[3] = {};
     dsp::SchmittTrigger inTrigs[NUM_INPUTS];
     bool orState = false;
     bool trigState = false;
@@ -73,16 +72,16 @@ void LogicCombine::process(const ProcessArgs &args)
         trigState = trigState || trigs[i];
     }
 
-    outs[0] = orState ? 5.0f : 0.0f;
+    outs[0] = orState ? 10 : 0;
     outs[1] = 5.0f - outs[0];
 
     if(trigState)
     {
         trigger.trigger();
-        lights[TRIG_LIGHT].value = 5.0f;
+        lights[TRIG_LIGHT].value = 10;
     }
 
-    outs[2] = trigger.process() ? 5.0f : 0.0f;
+    outs[2] = trigger.process() ? 10 : 0;
 
     if (lights[TRIG_LIGHT].value > 0.01)
         lights[TRIG_LIGHT].value -= lights[TRIG_LIGHT].value / lightLambda * args.sampleTime;

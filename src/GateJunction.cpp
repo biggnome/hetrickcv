@@ -82,7 +82,6 @@ struct GateJunction : Module
 	};
 
     float ins[8] = {};
-    float outs[8] = {};
 
     bool muteState[8] = {};
     dsp::SchmittTrigger muteTrigger[8];
@@ -172,14 +171,14 @@ struct GateJunction : Module
 
 void GateJunction::process(const ProcessArgs &args)
 {
-    ins[0] = (inputs[IN1_INPUT].getVoltage() >= 1.0f) ? 5.0f : 0.0f;
+    ins[0] = (inputs[IN1_INPUT].getVoltage() >= 1.0f) ? 10 : 0;
 
     for(int i = 1; i < 8; i++)
     {
         const int thisInput = IN1_INPUT + i;
         if(inputs[thisInput].isConnected())
         {
-            ins[i] = (inputs[thisInput].getVoltage() >= 1.0f) ? 5.0f : 0.0f;
+            ins[i] = (inputs[thisInput].getVoltage() >= 1.0f) ? 10 : 0;
         }
         else
         {
@@ -192,8 +191,8 @@ void GateJunction::process(const ProcessArgs &args)
         if (muteTrigger[i].process(params[MUTE1_PARAM + i].getValue())) muteState[i] ^= true;
         if (invTrigger[i].process(params[INV1_PARAM + i].getValue())) invState[i] ^= true;
 
-        if(invState[i]) ins[i] = 5.0f - ins[i];
-        if(muteState[i]) ins[i] = 0.0f;
+        if(invState[i]) ins[i] = 10 - ins[i];
+        if(muteState[i]) ins[i] = 0;
 
         outputs[OUT1_OUTPUT + i].setVoltage(ins[i]);
         lights[OUT1_LIGHT + i].value = ins[i];

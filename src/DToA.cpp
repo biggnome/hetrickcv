@@ -144,17 +144,17 @@ void DigitalToAnalog::process(const ProcessArgs &args)
     if (rectTrigger.process(params[RECTIFY_PARAM].getValue())) rectMode = (rectMode + 1) % 3;
     if (compTrigger.process(params[COMP_PARAM].getValue())) compMode = (compMode +1) % 3;
 
-    lights[MODE_UNI8_LIGHT].setBrightness(mode == 0 ? 1.0f : 0.0f);
-    lights[MODE_BOFF_LIGHT].setBrightness(mode == 1 ? 1.0f : 0.0f);
-    lights[MODE_BSIG_LIGHT].setBrightness(mode == 2 ? 1.0f : 0.0f);
+    lights[MODE_UNI8_LIGHT].setBrightness(mode == 0 ? 1 : 0);
+    lights[MODE_BOFF_LIGHT].setBrightness(mode == 1 ? 1 : 0);
+    lights[MODE_BSIG_LIGHT].setBrightness(mode == 2 ? 1 : 0);
 
-    lights[RECT_NONE_LIGHT].setBrightness(rectMode == 0 ? 1.0f : 0.0f);
-    lights[RECT_HALF_LIGHT].setBrightness(rectMode == 1 ? 1.0f : 0.0f);
-    lights[RECT_FULL_LIGHT].setBrightness(rectMode == 2 ? 1.0f : 0.0f);
+    lights[RECT_NONE_LIGHT].setBrightness(rectMode == 0 ? 1 : 0);
+    lights[RECT_HALF_LIGHT].setBrightness(rectMode == 1 ? 1 : 0);
+    lights[RECT_FULL_LIGHT].setBrightness(rectMode == 2 ? 1 : 0);
 
-    lights[COMP_LIN_LIGHT].setBrightness(compMode == 0 ? 1.0f : 0.0f);
-    lights[COMP_A_LIGHT].setBrightness(compMode == 1 ? 1.0f : 0.0f);
-    lights[COMP_M_LIGHT].setBrightness(compMode == 2 ? 1.0f : 0.0f);
+    lights[COMP_LIN_LIGHT].setBrightness(compMode == 0 ? 1 : 0);
+    lights[COMP_A_LIGHT].setBrightness(compMode == 1 ? 1 : 0);
+    lights[COMP_M_LIGHT].setBrightness(compMode == 2 ? 1 : 0);
 
     const bool syncModeEnabled = inputs[SYNC_INPUT].isConnected();
     const bool readyForProcess = (!syncModeEnabled || (syncModeEnabled && clockTrigger.process(inputs[SYNC_INPUT].getVoltage())));
@@ -166,7 +166,7 @@ void DigitalToAnalog::process(const ProcessArgs &args)
         for(int i = 0; i < 8; i++)
         {
             ins[i] = inputs[IN1_INPUT + i].getVoltage() > 1.0f;
-            lights[IN1_LIGHT + i].value = ins[i] ? 1.0f : 0.0f;
+            lights[IN1_LIGHT + i].value = ins[i] ? 1 : 0;
         }
 
         if(mode == 0) processUni8();
