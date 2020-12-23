@@ -105,14 +105,14 @@ TwoToFourWidget::TwoToFourWidget(TwoToFour *module)
     //////PARAMS//////
 
     //////INPUTS//////
-    addInput(createInput<PJ301MPort>(Vec(10, 100), module, TwoToFour::INA_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(55, 100), module, TwoToFour::INB_INPUT));
+    addInput(createInput<PJ301MPort>(Vec(10, 96), module, TwoToFour::INA_INPUT));
+    addInput(createInput<PJ301MPort>(Vec(55, 96), module, TwoToFour::INB_INPUT));
 
     for(int i = 0; i < 4; i++)
     {
         const int yPos = i*45;
         addOutput(createOutput<PJ301MPort>(Vec(33, 150 + yPos), module, TwoToFour::OUT1_OUTPUT + i));
-        addChild(createLight<SmallLight<GreenRedLight>>(Vec(70, 158 + yPos), module, TwoToFour::OUT1_POS_LIGHT + i*2));
+        addChild(createLight<SmallLight<GreenRedLight>>(Vec(72, 158 + yPos), module, TwoToFour::OUT1_POS_LIGHT + i*2));
     }
 }
 
