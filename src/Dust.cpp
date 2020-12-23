@@ -26,7 +26,7 @@ struct Dust : Module
 	Dust()
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
-		configParam(Dust::RATE_PARAM, 0, 4.0, 0.0, "Density");
+		configParam(Dust::RATE_PARAM, 0, 4.0, 0.0, "Density", "", 0, 0.25);
 		configParam(Dust::BIPOLAR_PARAM, 0.0, 1.0, 0.0, "Polarity");
 	}
 
