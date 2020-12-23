@@ -59,8 +59,8 @@ struct Boolean3 : Module
 
 
 void Boolean3::process(const ProcessArgs &args)
-{
-    int channels = std::max(std::max(inputs[INA_INPUT].getChannels(), inputs[INB_INPUT].getChannels()), inputs[INC_INPUT].getChannels());
+{   // derive channels from highest poly input and make sure it starts with a logical state
+    int channels = std::max(std::max(std::max(inputs[INA_INPUT].getChannels(), inputs[INB_INPUT].getChannels()), inputs[INC_INPUT].getChannels()), 1);
     for (int c = 0; c < channels; c++) {
         inA = ins[0].process(inputs[INA_INPUT].getPolyVoltage(c));
         inB = ins[1].process(inputs[INB_INPUT].getPolyVoltage(c));
