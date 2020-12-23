@@ -62,7 +62,7 @@ struct AnalogToDigital : Module
     dsp::SchmittTrigger rectTrigger;
     dsp::SchmittTrigger compTrigger;
 
-    int mode = 0;
+    int mode = 2;
     int rectMode = 0;
     int compMode = 0;
 
