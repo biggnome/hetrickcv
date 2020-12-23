@@ -48,10 +48,10 @@ struct FlipFlop : Module
     void onReset() override
     {
         lights[DATA_LIGHT].value = 0.0f;
-        outs[0] = 0.0f;
+        outs[0] = 0;
         outs[1] = lights[DATA_LIGHT].value;
-        outs[2] = 5.0f;
-        outs[3] = 5.0f;
+        outs[2] = 10;
+        outs[3] = 10;
     }
 
 	// For more advanced Module features, read Rack's engine.hpp header file
@@ -111,16 +111,16 @@ FlipFlopWidget::FlipFlopWidget(FlipFlop *module)
     //////PARAMS//////
 
     //////INPUTS//////
-    addInput(createInput<PJ301MPort>(Vec(10, 100), module, FlipFlop::INT_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(55, 100), module, FlipFlop::IND_INPUT));
-    addChild(createLight<SmallLight<RedLight>>(Vec(18, 87), module, FlipFlop::TOGGLE_LIGHT));
-    addChild(createLight<SmallLight<RedLight>>(Vec(63, 87), module, FlipFlop::DATA_LIGHT));
+    addInput(createInput<PJ301MPort>(Vec(10, 96), module, FlipFlop::INT_INPUT));
+    addInput(createInput<PJ301MPort>(Vec(55, 96), module, FlipFlop::IND_INPUT));
+    addChild(createLight<SmallLight<RedLight>>(Vec(19, 83), module, FlipFlop::TOGGLE_LIGHT));
+    addChild(createLight<SmallLight<RedLight>>(Vec(64, 83), module, FlipFlop::DATA_LIGHT));
 
     for(int i = 0; i < 4; i++)
     {
         const int yPos = i*45;
         addOutput(createOutput<PJ301MPort>(Vec(33, 150 + yPos), module, FlipFlop::FFT_OUTPUT + i));
-        addChild(createLight<SmallLight<RedLight>>(Vec(70, 158 + yPos), module, FlipFlop::FFT_LIGHT + i));
+        addChild(createLight<SmallLight<RedLight>>(Vec(72, 158 + yPos), module, FlipFlop::FFT_LIGHT + i));
     }
 }
 
