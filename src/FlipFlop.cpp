@@ -72,8 +72,7 @@ void FlipFlop::process(const ProcessArgs &args)
         toggle = !toggle;
 
         outs[0] = toggle ? 10 : 0;
-        outs[1] = (inputs[IND_INPUT].getVoltage(0) >= 1.0f) ? 10 : 0;
-
+        outs[1] = dataIn ? 10 : 0;
         outs[2] = 10 - outs[0];
         outs[3] = 10 - outs[1];
     }
