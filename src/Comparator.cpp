@@ -36,7 +36,7 @@ struct Comparator : Module
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 		configParam(Comparator::AMOUNT_PARAM, -5.0, 5.0, 0.0, "Amount", "V");
-		configParam(Comparator::SCALE_PARAM, -1.0, 1.0, 1.0, "Scale");
+		configParam(Comparator::SCALE_PARAM, -1.0, 1.0, 0.0, "Scale");
 	}
 
 	TriggerGenWithSchmitt ltTrig, gtTrig;

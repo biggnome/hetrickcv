@@ -25,7 +25,7 @@ struct Bitshift : Module
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
 		configParam(Bitshift::AMOUNT_PARAM, -31.0, 31.0, 0.0, "Shift");
-		configParam(Bitshift::SCALE_PARAM, -1.0, 1.0, 1.0, "Mod");
+		configParam(Bitshift::SCALE_PARAM, -1.0, 1.0, 0.0, "Mod");
 		configParam(Bitshift::RANGE_PARAM, 0.0, 1.0, 0.0, "Range", "V", 0.0, 5.0, 5.0);
 	}
 

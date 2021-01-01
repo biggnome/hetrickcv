@@ -25,7 +25,7 @@ struct Exponent : Module
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
 		configParam(Exponent::AMOUNT_PARAM, -1.0, 1.0, 0.0, "Amount", "", 2);
-		configParam(Exponent::SCALE_PARAM, -1.0, 1.0, 1.0, "Mod");
+		configParam(Exponent::SCALE_PARAM, -1.0, 1.0, 0.0, "Mod");
 		configParam(Exponent::RANGE_PARAM, 0.0, 1.0, 0.0, "Range", "V", 0.0, 5.0, 5.0);
 	}
 

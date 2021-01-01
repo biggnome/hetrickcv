@@ -27,7 +27,7 @@ struct FlipPan : Module
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
 		configParam(FlipPan::AMOUNT_PARAM, 0.0, 5.0, 2.5, "Pan", "", 0, 0.4, -1);
-		configParam(FlipPan::SCALE_PARAM, -1.0, 1.0, 1.0, "Mod");
+		configParam(FlipPan::SCALE_PARAM, -1.0, 1.0, 0.0, "Mod");
 		configParam(FlipPan::STYLE_PARAM, 0.0, 1.0, 0.0, "Style");
 	}
 

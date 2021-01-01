@@ -25,7 +25,7 @@ struct Contrast : Module
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
 		configParam(Contrast::AMOUNT_PARAM, 0, 5.0, 0.0, "Amount");
-		configParam(Contrast::SCALE_PARAM, -1.0, 1.0, 1.0, "Mod");
+		configParam(Contrast::SCALE_PARAM, -1.0, 1.0, 0.0, "Mod");
 		configParam(Contrast::RANGE_PARAM, 0.0, 1.0, 0.0, "Range", "V", 0.0, 5.0, 5.0);
 	}
 
