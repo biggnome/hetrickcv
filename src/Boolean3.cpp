@@ -102,8 +102,8 @@ void Boolean3::process(const ProcessArgs &args)
     outputs[XNOR_OUTPUT].setChannels(channels);
 
     lights[INA_LIGHT].value = ins[0].process(inputs[INA_INPUT].getVoltage(0)) ? 10 : 0;
-    lights[INB_LIGHT].value = ins[1].process(inputs[INA_INPUT].getVoltage(0)) ? 10 : 0;
-    lights[INC_LIGHT].value = ins[2].process(inputs[INA_INPUT].getVoltage(0)) ? 10 : 0;
+    lights[INB_LIGHT].value = ins[1].process(inputs[INB_INPUT].getVoltage(0)) ? 10 : 0;
+    lights[INC_LIGHT].value = ins[2].process(inputs[INC_INPUT].getVoltage(0)) ? 10 : 0;
 
     lights[OR_LIGHT].value = outs[0];
     lights[AND_LIGHT].value = outs[1];
