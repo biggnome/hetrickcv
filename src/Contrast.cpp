@@ -11,13 +11,15 @@ struct Contrast : Module
 	};
 	enum InputIds
 	{
-        MAIN_INPUT,
+        INPUT_L,
+        INPUT_R,
         AMOUNT_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds
 	{
-		MAIN_OUTPUT,
+		OUTPUT_L,
+		OUTPUT_R,
 		NUM_OUTPUTS
 	};
 
@@ -65,27 +67,32 @@ void Contrast::process(const ProcessArgs &args)
 {
     bool mode5V = (params[RANGE_PARAM].getValue() == 0.0f);
 
-    int channels = inputs[MAIN_INPUT].getChannels();
+    int channels = std::max(inputs[INPUT_L].getChannels(), inputs[INPUT_R].getChannels());
     for (int c = 0; c < channels; c++) {
-    	float input = inputs[MAIN_INPUT].getPolyVoltage(c);
+    	for (int i=0; i <= 1; i++) {
+	    	if(inputs[INPUT_L + i].isConnected()) {
+	    		float input = inputs[INPUT_L + i].getPolyVoltage(c);
 
-	    if (mode5V) input = clamp(input, -5.0f, 5.0f) * 0.2f;
-	    else input = clamp(input, -10.0f, 10.0f) * 0.1f;
+			    if (mode5V) input = clamp(input, -5.0f, 5.0f) * 0.2f;
+			    else input = clamp(input, -10.0f, 10.0f) * 0.1f;
 
-	    float contrast = params[AMOUNT_PARAM].getValue() + (inputs[AMOUNT_INPUT].getPolyVoltage(c) * params[SCALE_PARAM].getValue());
-	    contrast = clamp(contrast, 0.0f, 5.0f) * 0.2f;
+			    float contrast = params[AMOUNT_PARAM].getValue() + (inputs[AMOUNT_INPUT].getPolyVoltage(c) * params[SCALE_PARAM].getValue());
+			    contrast = clamp(contrast, 0.0f, 5.0f) * 0.2f;
 
-	    float factor1 = input * elevenOverSeven;
-	    float factor2 = fastSin(input * twoPi) * contrast;
+			    float factor1 = input * elevenOverSeven;
+			    float factor2 = fastSin(input * twoPi) * contrast;
 
-	    float output = fastSin(factor1 + factor2);
+			    float output = fastSin(factor1 + factor2);
 
-	    if (mode5V) output *= 5.0f;
-	    else output *= 10.0f;
+			    if (mode5V) output *= 5.0f;
+			    else output *= 10.0f;
 
-	    outputs[MAIN_OUTPUT].setVoltage(output, c);
+			    outputs[OUTPUT_L + i].setVoltage(output, c);
+			}
+		}
 	}
-	outputs[MAIN_OUTPUT].setChannels(channels);
+	outputs[OUTPUT_L].setChannels(channels);
+	outputs[OUTPUT_R].setChannels(channels);
 }
 
 struct CKSSRot : SvgSwitch {
@@ -121,11 +128,13 @@ ContrastWidget::ContrastWidget(Contrast *module)
     addParam(createParam<CKSSRot>(Vec(35, 200), module, Contrast::RANGE_PARAM));
 
 	//////INPUTS//////
-    addInput(createInput<PJ301MPort>(Vec(33, 235), module, Contrast::MAIN_INPUT));
+    addInput(createInput<PJ301MPort>(Vec(10, 235), module, Contrast::INPUT_L));
+    addInput(createInput<PJ301MPort>(Vec(55, 235), module, Contrast::INPUT_R));
     addInput(createInput<PJ301MPort>(Vec(33, 145), module, Contrast::AMOUNT_INPUT));
 
 	//////OUTPUTS//////
-	addOutput(createOutput<PJ301MPort>(Vec(33, 285), module, Contrast::MAIN_OUTPUT));
+	addOutput(createOutput<PJ301MPort>(Vec(10, 285), module, Contrast::OUTPUT_L));
+	addOutput(createOutput<PJ301MPort>(Vec(55, 285), module, Contrast::OUTPUT_R));
 }
 
 Model *modelContrast = createModel<Contrast, ContrastWidget>("Contrast");
