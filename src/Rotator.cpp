@@ -58,9 +58,6 @@ struct Rotator : Module
 		NUM_LIGHTS
 	};
 
-    float ins[8] = {};
-    float outs[8] = {};
-
 	Rotator()
 	{
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
