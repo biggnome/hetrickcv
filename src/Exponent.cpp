@@ -33,13 +33,18 @@ struct Exponent : Module
 
 	// faster powf() approximation cribbed from martin.ankerl.com/2007/10/04/optimized-pow-approximation-for-java-and-c-c/
 	double fastPow(double a, double b) {
-	    union {
-	        double d;
-	        int x[2];
-	    } u = { a };
-	    u.x[1] = (int)(b * (u.x[1] - 1072632447) + 1072632447);
-	    u.x[0] = 0;
-	    return u.d;
+	    if (a == 0) {
+	    	return 0;
+	    }
+	    else {
+	    	union {
+		        double d;
+		        int x[2];
+		    } u = { a };
+		    u.x[1] = (int)(b * (u.x[1] - 1072632447) + 1072632447);
+		    u.x[0] = 0;
+		    return u.d;
+		}
 	}
 
 	// For more advanced Module features, read Rack's engine.hpp header file
