@@ -41,6 +41,7 @@
     {
       "slug": "BlankPanel",
       "name": "Blank Panel",
+      "disabled": true,
       "description": "A blank panel. Show your love for HetrickCV",
       "tags": [
         "Blank"
@@ -157,6 +158,14 @@
       "description": "Generates up to eight random gates.",
       "tags": [
         "Random"
+      ]
+    },
+    {
+      "slug": "RingMod",
+      "name": "Ring Modulator",
+      "description": "Diode-modeled ring modulator.",
+      "tags": [
+        "Ring Modulator"
       ]
     },
     {

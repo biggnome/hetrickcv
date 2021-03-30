@@ -25,6 +25,7 @@ extern Model *modelFlipPan;
 extern Model *modelGateJunction;
 extern Model *modelLogicCombine;
 extern Model *modelRandomGates;
+extern Model *modelRingMod;
 extern Model *modelRotator;
 extern Model *modelScanner;
 extern Model *modelWaveshape;
