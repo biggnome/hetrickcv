@@ -21,12 +21,26 @@ struct Exponent : Module
 		NUM_OUTPUTS
 	};
 
+	int quality = 0;
+
 	Exponent()
 	{
 		config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS);
 		configParam(Exponent::AMOUNT_PARAM, -1.0, 1.0, 0.0, "Amount", "", 2);
 		configParam(Exponent::SCALE_PARAM, -1.0, 1.0, 0.0, "Mod");
 		configParam(Exponent::RANGE_PARAM, 0.0, 1.0, 0.0, "Range", "V", 0.0, 5.0, 5.0);
+	}
+
+	json_t* dataToJson() override {
+		json_t* rootJ = json_object();
+		json_object_set_new(rootJ, "quality", json_integer(quality));
+		return rootJ;
+	}
+
+	void dataFromJson(json_t* rootJ) override {
+		json_t* modeJ = json_object_get(rootJ, "quality");
+		if (modeJ)
+			quality = json_integer_value(modeJ);
 	}
 
 	void process(const ProcessArgs &args) override;
@@ -72,7 +86,10 @@ void Exponent::process(const ProcessArgs &args)
 		if(exponent < 0) exponent = 1.0f - (exponent * -0.5f);
 		else exponent += 1.0f;
 
-	    float output = fastPow(input, exponent);
+		float output;
+
+		if(quality) output = powf(input, exponent);
+	    else output = fastPow(input, exponent);
 
 		if (negativeInput) output *= -1.0f;
 	    if(mode5V) output *= 5.0f;

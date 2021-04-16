@@ -32,7 +32,7 @@ struct RingMod : Module
 	// - reset, randomize: implements special behavior when user clicks these from the context menu
 };
 
-double diode(float x) {
+double diode(double x) {
 	x = x * 0.2;
 	int sign = (x < 0) ? -1 : ((x > 0) ? 1 : 0);
 	x = abs(x) - 0.667;
