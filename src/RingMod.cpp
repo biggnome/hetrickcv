@@ -52,7 +52,7 @@ void RingMod::process(const ProcessArgs &args)
 
     float ring = parasat(diode(inC + inM) + diode(inC - inM));
 
-    outputs[OUT1_OUTPUT].setVoltage(clamp(ring, -10.0f, 10.0f));
+    outputs[OUT1_OUTPUT].setVoltage(clamp(ring + ring, -10.0f, 10.0f));
 }
 
 struct RingModWidget : ModuleWidget { RingModWidget(RingMod *module); };
